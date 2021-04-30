@@ -1,4 +1,4 @@
-package by.epamtc.service;
+package by.epamtc.service.sort;
 
 import by.epamtc.entity.AbstractPlane;
 

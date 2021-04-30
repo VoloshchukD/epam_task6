@@ -1,7 +1,7 @@
 package by.epamtc.entity;
 
-import by.epamtc.service.PlaneParametersSorting;
-import by.epamtc.service.ValueComparator;
+import by.epamtc.service.sort.PlaneParametersSorting;
+import by.epamtc.service.sort.ValueComparator;
 
 public class Airline {
 
@@ -33,9 +33,28 @@ public class Airline {
         this.planes = planes;
     }
 
-    public AbstractPlane[] sort () {
+    public AbstractPlane[] sort() {
         return PlaneParametersSorting.sort(planes, new ValueComparator());
     }
 
+    public int countTotalLiftingCapacity() {
+        int totalLiftingCapacity = 0;
+
+        for (int i = 0; i < planes.length; i++) {
+            totalLiftingCapacity += planes[i].getEngine().getLiftingCapacity();
+        }
+
+        return totalLiftingCapacity;
+    }
+
+    public int countTotalCrewCapacity() {
+        int totalCrewCapacity = 0;
+
+        for (int i = 0; i < planes.length; i++) {
+            totalCrewCapacity += planes[i].getCrewCapacity();
+        }
+
+        return totalCrewCapacity;
+    }
 
 }

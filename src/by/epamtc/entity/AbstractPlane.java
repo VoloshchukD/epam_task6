@@ -30,6 +30,10 @@ public abstract class AbstractPlane {
         this.engine = engine;
     }
 
+    public int getCrewCapacity() {
+        return crewCapacity;
+    }
+
     public abstract void fly();
 
     public void refuel() {
@@ -71,4 +75,5 @@ public abstract class AbstractPlane {
                 ", crewCapacity=" + crewCapacity +
                 ", crew=" + Arrays.toString(crew);
     }
+
 }
