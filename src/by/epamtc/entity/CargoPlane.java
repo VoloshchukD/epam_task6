@@ -1,15 +1,29 @@
 package by.epamtc.entity;
 
-public class CargoPlane extends AbstractPlane{
+public class CargoPlane extends AbstractPlane {
 
-    @Override
-    public void takeOff() {
+    public CargoPlane() {
+    }
+
+    public CargoPlane(AircraftEngine engine, String modelName, int crewCapacity) {
+        super(engine, modelName, crewCapacity);
+    }
+
+    public void loadСargo() {
+
+    }
+
+    public void unloadСargo() {
 
     }
 
     @Override
-    public void land() {
+    public void fly() {
 
     }
 
+    @Override
+    public String toString() {
+        return "CargoPlane{}";
+    }
 }
