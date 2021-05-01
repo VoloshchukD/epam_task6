@@ -1,6 +1,8 @@
 package by.epamtc.entity;
 
-public class AircraftEngine {
+import java.io.Serializable;
+
+public class AircraftEngine implements Serializable {
 
     private int maxSpeed;
 
