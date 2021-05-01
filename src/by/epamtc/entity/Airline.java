@@ -57,4 +57,36 @@ public class Airline {
         return totalCrewCapacity;
     }
 
+    public AbstractPlane[] findPlanesByFuelConsumption(int minFuelConsumption, int maxFuelConsumption) {
+        AbstractPlane[] planesCopy = new AbstractPlane[planes.length];
+
+        int j = 0;
+        for (int i = 0; i < planes.length; i++) {
+            if (planes[i].getEngine().getFuelConsumption() <= maxFuelConsumption
+                    && planes[i].getEngine().getFuelConsumption() >= minFuelConsumption) {
+                planesCopy[j] = planes[i];
+                j++;
+            }
+        }
+
+        return removeNullPlanes(planesCopy, j);
+    }
+
+    private AbstractPlane[] removeNullPlanes(AbstractPlane[] array, int newLength) {
+        AbstractPlane[] resultPlanes = new AbstractPlane[newLength];
+        int i = 0;
+        int j = 0;
+        while (i < array.length) {
+            if (j >= newLength) {
+                break;
+            }
+            if (array[i] != null) {
+                resultPlanes[j] = array[i];
+                j++;
+            }
+            i++;
+        }
+        return resultPlanes;
+    }
+
 }
