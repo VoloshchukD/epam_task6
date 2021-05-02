@@ -1,7 +1,7 @@
 package by.epamtc.util;
 
-import by.epamtc.entity.Goods;
-import by.epamtc.entity.Person;
+import by.epamtc.entity.plane.additional.Goods;
+import by.epamtc.entity.plane.additional.Person;
 
 public class FillArrayAction {
 

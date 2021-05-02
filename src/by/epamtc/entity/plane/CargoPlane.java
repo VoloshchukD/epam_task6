@@ -1,5 +1,8 @@
-package by.epamtc.entity;
+package by.epamtc.entity.plane;
 
+import by.epamtc.entity.plane.additional.AircraftEngine;
+import by.epamtc.entity.plane.additional.CargoPlaneWorkload;
+import by.epamtc.entity.plane.additional.Goods;
 import by.epamtc.util.FillArrayAction;
 
 import java.io.Serializable;
@@ -19,28 +22,12 @@ public class CargoPlane extends AbstractPlane implements Serializable {
         super(engine, modelName, crewCapacity, destinationDistance);
     }
 
-    public int getCurrentLoadWeight() {
-        return currentLoadWeight;
-    }
-
-    public void setCurrentLoadWeight(int currentLoadWeight) {
+    public CargoPlane(AircraftEngine engine, String modelName, int crewCapacity, int destinationDistance,
+                      int currentLoadWeight, Goods[] loadedGoods, CargoPlaneWorkload workload) {
+        super(engine, modelName, crewCapacity, destinationDistance);
         this.currentLoadWeight = currentLoadWeight;
-    }
-
-    public CargoPlaneWorkload getWorkload() {
-        return workload;
-    }
-
-    public void setWorkload(CargoPlaneWorkload workload) {
-        this.workload = workload;
-    }
-
-    public Goods[] getLoadedGoods() {
-        return loadedGoods;
-    }
-
-    public void setLoadedGoods(Goods[] loadedGoods) {
         this.loadedGoods = loadedGoods;
+        this.workload = workload;
     }
 
     @Override
@@ -49,8 +36,8 @@ public class CargoPlane extends AbstractPlane implements Serializable {
             int consumptionPerKilometer = getEngine().getFuelConsumption();
             int fuelInTank = getEngine().getTankFuelAmount();
 
-            int fuelInTankLeft = fuelInTank - getDestinationDistance() * consumptionPerKilometer *
-                    workload.getFuelConsumptionFactor();
+            int fuelInTankLeft = fuelInTank - getDestinationDistance()
+                    * consumptionPerKilometer * workload.getFuelConsumptionFactor();
             getEngine().setTankFuelAmount(fuelInTankLeft);
         }
     }
@@ -59,7 +46,6 @@ public class CargoPlane extends AbstractPlane implements Serializable {
         //if (goods == null) throw new
         if (loadedGoods != null) {
             loadedGoods = FillArrayAction.createArrayWithNewGoods(goods, loadedGoods);
-
         } else {
             loadedGoods = new Goods[1];
             loadedGoods[0] = goods;
@@ -139,17 +125,26 @@ public class CargoPlane extends AbstractPlane implements Serializable {
     public String toString() {
         StringBuilder result = new StringBuilder(getClass().getName());
         result.append("@workload=");
-        result.append(workload.toString());
+        result.append(workload);
         result.append(", currentLoadWeight=");
         result.append(currentLoadWeight);
         result.append(", loadedGoods=[");
 
         String separators = ", ";
-        for (Goods goods : loadedGoods) {
-            result.append(goods.toString());
-            result.append(separators);
+        if (loadedGoods != null) {
+            for (Goods goods : loadedGoods) {
+                if (goods != null) {
+                    result.append(goods.toString());
+                } else {
+                    result.append(goods);
+                }
+
+                result.append(separators);
+            }
+            result.delete(result.length() - separators.length() - 1, result.length());
+        } else {
+            result.append(loadedGoods);
         }
-        result.delete(result.length() - separators.length() - 1, result.length());
         result.append("]");
 
         return result.toString();

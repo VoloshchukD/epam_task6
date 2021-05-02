@@ -1,7 +1,7 @@
 package by.epamtc.service;
 
-import by.epamtc.entity.AbstractPlane;
-import by.epamtc.entity.AircraftEngine;
+import by.epamtc.entity.plane.AbstractPlane;
+import by.epamtc.entity.plane.additional.AircraftEngine;
 
 public abstract class PlaneFactory {
 

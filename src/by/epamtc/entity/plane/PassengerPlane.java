@@ -1,44 +1,26 @@
-package by.epamtc.entity;
+package by.epamtc.entity.plane;
 
+import by.epamtc.entity.plane.additional.AircraftEngine;
+import by.epamtc.entity.plane.additional.Person;
 import by.epamtc.util.FillArrayAction;
 
 import java.io.Serializable;
 
 public class PassengerPlane extends AbstractPlane implements Serializable {
 
-    private int passengersCapacity;
+    private int passengersCapacity = 10;
 
     private Person[] passengers;
 
     public PassengerPlane() {
+        this.passengers = new Person[passengersCapacity];
     }
 
-    ///////////del
-    public PassengerPlane(AircraftEngine engine, String modelName, int crewCapacity, int destinationDistance) {
-        super(engine, modelName, crewCapacity, destinationDistance);
-    }
-
-    public PassengerPlane(AircraftEngine engine, String modelName, int crewCapacity, int passengersCapacity,
-                          Person[] passengers, int destinationDistance) {
+    public PassengerPlane(AircraftEngine engine, String modelName, int crewCapacity,
+                          int destinationDistance, int passengersCapacity) {
         super(engine, modelName, crewCapacity, destinationDistance);
         this.passengersCapacity = passengersCapacity;
-        this.passengers = passengers;
-    }
-
-    public int getPassengersCapacity() {
-        return passengersCapacity;
-    }
-
-    public void setPassengersCapacity(int passengersCapacity) {
-        this.passengersCapacity = passengersCapacity;
-    }
-
-    public Person[] getPassengers() {
-        return passengers;
-    }
-
-    public void setPassengers(Person[] passengers) {
-        this.passengers = passengers;
+        this.passengers = new Person[passengersCapacity];
     }
 
     @Override
@@ -58,8 +40,10 @@ public class PassengerPlane extends AbstractPlane implements Serializable {
         FillArrayAction.addAllPersons(newPassengers, passengers);
     }
 
-    public void boardOffPassengers() {
+    public Person[] boardOffPassengers() {
+        Person[] boardedOffPassengers = passengers;
         FillArrayAction.removeAllPersons(passengers);
+        return boardedOffPassengers;
     }
 
     @Override
@@ -69,19 +53,17 @@ public class PassengerPlane extends AbstractPlane implements Serializable {
         if (!super.equals(o)) return false;
         PassengerPlane plane = (PassengerPlane) o;
 
-        boolean result = true;
+        boolean result = false;
         if (passengersCapacity == plane.passengersCapacity
                 && passengers.length == plane.passengers.length) {
             int i = 0;
             while (i < passengers.length) {
                 if (passengers[i] != plane.passengers[i]) {
-                    result = false;
                     break;
                 }
                 i++;
             }
-        } else {
-            result = false;
+            result = true;
         }
         return result;
     }
@@ -109,7 +91,11 @@ public class PassengerPlane extends AbstractPlane implements Serializable {
 
         String separators = ", ";
         for (Person passenger : passengers) {
-            result.append(passenger.toString());
+            if (passenger != null) {
+                result.append(passenger.toString());
+            } else {
+                result.append(passenger);
+            }
             result.append(separators);
         }
         result.delete(result.length() - separators.length() - 1, result.length());

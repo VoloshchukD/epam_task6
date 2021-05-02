@@ -1,9 +1,8 @@
 package by.epamtc.service;
 
-import by.epamtc.entity.AbstractPlane;
-import by.epamtc.entity.AircraftEngine;
-import by.epamtc.entity.CargoPlane;
-import by.epamtc.service.PlaneFactory;
+import by.epamtc.entity.plane.AbstractPlane;
+import by.epamtc.entity.plane.additional.AircraftEngine;
+import by.epamtc.entity.plane.CargoPlane;
 
 public class CargoPlaneFactory extends PlaneFactory {
 

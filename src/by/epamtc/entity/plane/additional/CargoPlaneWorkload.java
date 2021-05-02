@@ -1,4 +1,4 @@
-package by.epamtc.entity;
+package by.epamtc.entity.plane.additional;
 
 public enum CargoPlaneWorkload {
 

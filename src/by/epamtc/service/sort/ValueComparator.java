@@ -1,6 +1,6 @@
 package by.epamtc.service.sort;
 
-import by.epamtc.entity.AbstractPlane;
+import by.epamtc.entity.plane.AbstractPlane;
 
 import java.util.Comparator;
 

@@ -1,5 +1,7 @@
-package by.epamtc.entity;
+package by.epamtc.entity.plane;
 
+import by.epamtc.entity.plane.additional.AircraftEngine;
+import by.epamtc.entity.plane.additional.Person;
 import by.epamtc.util.FillArrayAction;
 
 import java.io.Serializable;
@@ -10,28 +12,21 @@ public abstract class AbstractPlane implements Serializable {
 
     private String modelName;
 
-    private int crewCapacity;
+    private int crewCapacity = 2;
 
     private Person[] crew;
 
     private int destinationDistance;
 
     public AbstractPlane() {
+        this.crew = new Person[crewCapacity];
     }
 
     public AbstractPlane(AircraftEngine engine, String modelName, int crewCapacity, int destinationDistance) {
         this.engine = engine;
         this.modelName = modelName;
         this.crewCapacity = crewCapacity;
-        this.destinationDistance = destinationDistance;
-    }
-
-    public AbstractPlane(AircraftEngine engine, String modelName,
-                         int crewCapacity, Person[] crew, int destinationDistance) {
-        this.engine = engine;
-        this.modelName = modelName;
-        this.crewCapacity = crewCapacity;
-        this.crew = crew;
+        this.crew = new Person[crewCapacity];
         this.destinationDistance = destinationDistance;
     }
 
@@ -43,16 +38,8 @@ public abstract class AbstractPlane implements Serializable {
         this.modelName = modelName;
     }
 
-    public void setCrewCapacity(int crewCapacity) {
-        this.crewCapacity = crewCapacity;
-    }
-
-    public Person[] getCrew() {
-        return crew;
-    }
-
-    public void setCrew(Person[] crew) {
-        this.crew = crew;
+    public int getCrewCapacity() {
+        return crewCapacity;
     }
 
     public AircraftEngine getEngine() {
@@ -61,10 +48,6 @@ public abstract class AbstractPlane implements Serializable {
 
     public void setEngine(AircraftEngine engine) {
         this.engine = engine;
-    }
-
-    public int getCrewCapacity() {
-        return crewCapacity;
     }
 
     public int getDestinationDistance() {
@@ -89,8 +72,10 @@ public abstract class AbstractPlane implements Serializable {
         FillArrayAction.addAllPersons(crewMembers, crew);
     }
 
-    public void boardOffCrew() {
+    public Person[] boardOffCrew() {
+        Person[] boardedOffCrew = crew;
         FillArrayAction.removeAllPersons(crew);
+        return boardedOffCrew;
     }
 
     @Override
