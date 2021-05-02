@@ -1,5 +1,7 @@
 package by.epamtc.entity;
 
+import by.epamtc.util.FillArrayAction;
+
 import java.io.Serializable;
 
 public abstract class AbstractPlane implements Serializable {
@@ -12,14 +14,25 @@ public abstract class AbstractPlane implements Serializable {
 
     private Person[] crew;
 
+    private int destinationDistance;
+
     public AbstractPlane() {
     }
 
-    public AbstractPlane(AircraftEngine engine, String modelName, int crewCapacity) {
+    public AbstractPlane(AircraftEngine engine, String modelName, int crewCapacity, int destinationDistance) {
         this.engine = engine;
         this.modelName = modelName;
         this.crewCapacity = crewCapacity;
-        this.crew = new Person[crewCapacity];
+        this.destinationDistance = destinationDistance;
+    }
+
+    public AbstractPlane(AircraftEngine engine, String modelName,
+                         int crewCapacity, Person[] crew, int destinationDistance) {
+        this.engine = engine;
+        this.modelName = modelName;
+        this.crewCapacity = crewCapacity;
+        this.crew = crew;
+        this.destinationDistance = destinationDistance;
     }
 
     public String getModelName() {
@@ -54,6 +67,14 @@ public abstract class AbstractPlane implements Serializable {
         return crewCapacity;
     }
 
+    public int getDestinationDistance() {
+        return destinationDistance;
+    }
+
+    public void setDestinationDistance(int destinationDistance) {
+        this.destinationDistance = destinationDistance;
+    }
+
     public abstract void fly();
 
     public void refuel() {
@@ -61,30 +82,15 @@ public abstract class AbstractPlane implements Serializable {
     }
 
     public void boardCrewMember(Person crewMember) {
-//        if (person == null) throw new
-        boolean isFull = true;
-        for (int i = 0; i < crew.length; i++) {
-            if (crew[i] == null) {
-                crew[i] = crewMember;
-                isFull = false;
-                break;
-            }
-        }
-//        if (isFull) throw new
-
+        FillArrayAction.addPerson(crewMember, crew);
     }
 
     public void boardAllCrewMembers(Person[] crewMembers) {
-//        if (persons == null) throw new NullBallsException("Balls in basket are not initialized");
-        for (int i = 0; i < crewMembers.length; i++) {
-            boardCrewMember(crewMembers[i]);
-        }
+        FillArrayAction.addAllPersons(crewMembers, crew);
     }
 
     public void boardOffCrew() {
-        for (int i = 0; i < crew.length; i++) {
-            crew[i] = null;
-        }
+        FillArrayAction.removeAllPersons(crew);
     }
 
     @Override
@@ -93,23 +99,19 @@ public abstract class AbstractPlane implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         AbstractPlane that = (AbstractPlane) o;
 
-        boolean result = true;
-        if (crewCapacity != that.crewCapacity || !engine.equals(that.engine)
-                || !modelName.equals(that.modelName)) {
-            result = false;
-        }
-
-        if (crew.length == that.crew.length) {
+        boolean result = false;
+        if (crewCapacity == that.crewCapacity && engine.equals(that.engine)
+                && modelName.equals(that.modelName)
+                && destinationDistance == that.destinationDistance
+                && crew.length == that.crew.length) {
             int i = 0;
             while (i < crew.length) {
                 if (crew[i] != that.crew[i]) {
-                    result = false;
                     break;
                 }
                 i++;
             }
-        } else {
-            result = false;
+            result = true;
         }
 
         return result;
@@ -121,6 +123,7 @@ public abstract class AbstractPlane implements Serializable {
         result = 37 * result + engine.hashCode();
         result = 37 * result + modelName.hashCode();
         result = 37 * result + crewCapacity;
+        result = 37 * result + destinationDistance;
 
         int crewHashcode = 0;
         for (Person crewMember : crew) {
@@ -149,6 +152,9 @@ public abstract class AbstractPlane implements Serializable {
         }
         result.delete(result.length() - separators.length() - 1, result.length());
         result.append("]");
+
+        result.append(", destinationDistance=");
+        result.append(destinationDistance);
 
         return result.toString();
     }

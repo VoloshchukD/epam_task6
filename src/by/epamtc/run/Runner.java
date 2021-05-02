@@ -10,9 +10,9 @@ public class Runner {
                 10, 10, 10, 10);
         AircraftEngine engine = new AircraftEngine(100, 100,
                 100, 100, 100, 100, 100);
-        AbstractPlane p1 = new PassengerPlane(engine, "A1", 1);
-        AbstractPlane p2 = new PassengerPlane(engine2, "A2", 2);
-        AbstractPlane p3 = new CargoPlane(engine3, "A3", 3);
+        AbstractPlane p1 = new PassengerPlane(engine, "A1", 1, 10);
+        AbstractPlane p2 = new PassengerPlane(engine2, "A2", 2, 10);
+        AbstractPlane p3 = new CargoPlane(engine3, "A3", 3, 10);
 
         Airline airline = new Airline();
         AbstractPlane[] planes = {p1, p2, p3};

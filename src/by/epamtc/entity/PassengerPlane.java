@@ -1,5 +1,7 @@
 package by.epamtc.entity;
 
+import by.epamtc.util.FillArrayAction;
+
 import java.io.Serializable;
 
 public class PassengerPlane extends AbstractPlane implements Serializable {
@@ -8,22 +10,19 @@ public class PassengerPlane extends AbstractPlane implements Serializable {
 
     private Person[] passengers;
 
-    private PassengerPlaneWorkload workload;
-
     public PassengerPlane() {
     }
 
     ///////////del
-    public PassengerPlane(AircraftEngine engine, String modelName, int crewCapacity) {
-        super(engine, modelName, crewCapacity);
+    public PassengerPlane(AircraftEngine engine, String modelName, int crewCapacity, int destinationDistance) {
+        super(engine, modelName, crewCapacity, destinationDistance);
     }
 
-    public PassengerPlane(AircraftEngine engine, String modelName, int crewCapacity,
-                          int passengersCapacity, Person[] passengers, PassengerPlaneWorkload workload) {
-        super(engine, modelName, crewCapacity);
+    public PassengerPlane(AircraftEngine engine, String modelName, int crewCapacity, int passengersCapacity,
+                          Person[] passengers, int destinationDistance) {
+        super(engine, modelName, crewCapacity, destinationDistance);
         this.passengersCapacity = passengersCapacity;
         this.passengers = passengers;
-        this.workload = workload;
     }
 
     public int getPassengersCapacity() {
@@ -42,25 +41,25 @@ public class PassengerPlane extends AbstractPlane implements Serializable {
         this.passengers = passengers;
     }
 
-    public PassengerPlaneWorkload getWorkload() {
-        return workload;
-    }
-
-    public void setWorkload(PassengerPlaneWorkload workload) {
-        this.workload = workload;
-    }
-
     @Override
     public void fly() {
+        int consumptionPerKilometer = getEngine().getFuelConsumption();
+        int fuelInTank = getEngine().getTankFuelAmount();
 
+        int fuelInTankLeft = fuelInTank - getDestinationDistance() * consumptionPerKilometer;
+        getEngine().setTankFuelAmount(fuelInTankLeft);
     }
 
-    public void boardPassengers() {
+    public void boardPassenger(Person passenger) {
+        FillArrayAction.addPerson(passenger, passengers);
+    }
 
+    public void boardAllPassengers(Person[] newPassengers) {
+        FillArrayAction.addAllPersons(newPassengers, passengers);
     }
 
     public void boardOffPassengers() {
-
+        FillArrayAction.removeAllPersons(passengers);
     }
 
     @Override
@@ -71,9 +70,8 @@ public class PassengerPlane extends AbstractPlane implements Serializable {
         PassengerPlane plane = (PassengerPlane) o;
 
         boolean result = true;
-        if (passengersCapacity == plane.passengersCapacity &&
-                workload == plane.workload &&
-                passengers.length == plane.passengers.length) {
+        if (passengersCapacity == plane.passengersCapacity
+                && passengers.length == plane.passengers.length) {
             int i = 0;
             while (i < passengers.length) {
                 if (passengers[i] != plane.passengers[i]) {
@@ -99,7 +97,6 @@ public class PassengerPlane extends AbstractPlane implements Serializable {
         }
 
         result = 37 * result + passengersHashcode;
-        result = 37 * result + workload.hashCode();
         return result;
     }
 
@@ -117,8 +114,6 @@ public class PassengerPlane extends AbstractPlane implements Serializable {
         }
         result.delete(result.length() - separators.length() - 1, result.length());
         result.append("]");
-        result.append(", workload=");
-        result.append(workload);
         return result.toString();
     }
 
