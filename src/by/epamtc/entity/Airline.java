@@ -2,11 +2,10 @@ package by.epamtc.entity;
 
 import by.epamtc.entity.plane.AbstractPlane;
 import by.epamtc.service.sort.PlaneParametersSorting;
-import by.epamtc.service.sort.ValueComparator;
+import by.epamtc.service.sort.MaxSpeedComparator;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.Comparator;
 
 public class Airline implements Serializable {
 
@@ -38,8 +37,8 @@ public class Airline implements Serializable {
         this.planes = planes;
     }
 
-    public AbstractPlane[] sort() {
-        return PlaneParametersSorting.sort(planes, new ValueComparator());
+    public AbstractPlane[] sort(Comparator<AbstractPlane> comparator) {
+        return PlaneParametersSorting.sort(planes, comparator);
     }
 
     public int countTotalLiftingCapacity() {
@@ -99,22 +98,55 @@ public class Airline implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Airline airline = (Airline) o;
-        return Objects.equals(name, airline.name) && Arrays.equals(planes, airline.planes);
+
+        boolean result = false;
+        if (name == airline.name
+                && planes.length == airline.planes.length) {
+            int i = 0;
+            while (i < planes.length) {
+                if (planes[i] != airline.planes[i]) {
+                    break;
+                }
+                i++;
+            }
+            result = true;
+        }
+        return result;
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(name);
-        result = 31 * result + Arrays.hashCode(planes);
+        int result = 17;
+        result = 37 * result + name.hashCode();
+
+        int planesHashcode = 0;
+        for (AbstractPlane plane : planes) {
+            planesHashcode += plane.hashCode();
+        }
+
+        result = 37 * result + planesHashcode;
         return result;
     }
 
     @Override
     public String toString() {
-        return "Airline{" +
-                "name='" + name + '\'' +
-                ", planes=" + Arrays.toString(planes) +
-                '}';
+        StringBuilder result = new StringBuilder(getClass().getName());
+        result.append("@name=");
+        result.append(name);
+        result.append(", planes=[");
+
+        String separators = ", ";
+        for (AbstractPlane plane : planes) {
+            if (plane != null) {
+                result.append(plane.toString());
+            } else {
+                result.append(plane);
+            }
+            result.append(separators);
+        }
+        result.delete(result.length() - separators.length(), result.length());
+        result.append("]");
+        return result.toString();
     }
 
 }

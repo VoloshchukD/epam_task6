@@ -7,21 +7,21 @@ import java.util.Comparator;
 public class PlaneParametersSorting {
 
     public static AbstractPlane[] sort(AbstractPlane[] planes, Comparator<AbstractPlane> comparator) {
-        //copy array
-        for (int i = 1; i < planes.length; i++) {
+        AbstractPlane[] sortedPlanes = planes.clone();  //shallow copy
+        for (int i = 1; i < sortedPlanes.length; i++) {
             int j = i - 1;
-            AbstractPlane currentValue = planes[i];
+            AbstractPlane currentValue = sortedPlanes[i];
             while (j >= 0) {
-                if (comparator.compare(currentValue, planes[j]) < 0) {
-                    planes[j + 1] = planes[j];
+                if (comparator.compare(currentValue, sortedPlanes[j]) < 0) {
+                    sortedPlanes[j + 1] = sortedPlanes[j];
                 } else {
                     break;
                 }
                 j--;
             }
-            planes[j + 1] = currentValue;
+            sortedPlanes[j + 1] = currentValue;
         }
-        return planes;
+        return sortedPlanes;
     }
 
 }

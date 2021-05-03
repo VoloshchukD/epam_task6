@@ -4,7 +4,7 @@ import by.epamtc.entity.plane.AbstractPlane;
 
 import java.util.Comparator;
 
-public class ValueComparator implements Comparator<AbstractPlane> {
+public class MaxSpeedComparator implements Comparator<AbstractPlane> {
 
     @Override
     public int compare(AbstractPlane o1, AbstractPlane o2) {

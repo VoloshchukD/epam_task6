@@ -8,12 +8,14 @@ import by.epamtc.entity.plane.CargoPlane;
 import by.epamtc.entity.plane.PassengerPlane;
 import by.epamtc.entity.plane.additional.Goods;
 import by.epamtc.entity.plane.additional.Person;
+import by.epamtc.service.sort.MaxSpeedComparator;
+import by.epamtc.service.sort.RangeOfFlightComparator;
 
 import java.io.*;
 
 public class Runner {
     public static void main(String[] args) throws IOException {
-        AircraftEngine engine2 = new AircraftEngine(1, 2, 3,
+        AircraftEngine engine2 = new AircraftEngine(1, 2, 50,
                 4, 5, 6, 7);
         AircraftEngine engine3 = new AircraftEngine(10, 10, 10,
                 10, 10, 10, 10);
@@ -33,7 +35,6 @@ public class Runner {
         Person person8 = new Person("h", 53);
 
         Person[] persons = {person1, person2, person3, person4, person5, person6, person7, person8};
-
 
         Goods goods = new Goods("info", "adress", 21, false);
         Goods goods2 = new Goods("info", "adress", 19, false);
@@ -85,10 +86,16 @@ public class Runner {
         System.out.println("countTotalLiftingCapacity: " + airline.countTotalLiftingCapacity());
         System.out.println("countTotalCrewCapacity: " + airline.countTotalCrewCapacity());
 
-        AbstractPlane[] sorted = airline.sort();
-        System.out.println("sort");
+        AbstractPlane[] sorted = airline.sort(new MaxSpeedComparator());
+        System.out.println("sort maxSpeed");
         for (int i = 0; i < sorted.length; i++) {
             System.out.println(sorted[i].getEngine().getMaxSpeed());
+        }
+
+        sorted = airline.sort(new RangeOfFlightComparator());
+        System.out.println("sort rangeOfFlight");
+        for (int i = 0; i < sorted.length; i++) {
+            System.out.println(sorted[i].getEngine().getRangeOfFlight());
         }
 
         System.out.println("findPlanesByFuelConsumption");
@@ -96,6 +103,8 @@ public class Runner {
         for (int i = 0; i < result.length; i++) {
             System.out.println(result[i].getEngine().getFuelConsumption());
         }
+
+        System.out.println(airline);
     }
 
 }
