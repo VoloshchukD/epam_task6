@@ -36,7 +36,7 @@ public class FillArrayAction {
 
     public static Goods[] createArrayWithNewGoods(Goods goods, Goods[] goodsArray) {
         Goods[] newGoods = new Goods[goodsArray.length + 1];
-        for (int i = 0; i < newGoods.length; i++) {
+        for (int i = 0; i < goodsArray.length; i++) {
             newGoods[i] = goodsArray[i];
         }
         newGoods[goodsArray.length] = goods;

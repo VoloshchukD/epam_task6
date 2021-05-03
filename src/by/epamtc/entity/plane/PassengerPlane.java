@@ -85,7 +85,8 @@ public class PassengerPlane extends AbstractPlane implements Serializable {
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder(getClass().getName());
-        result.append("@passengersCapacity=");
+        result.append(super.toString().replaceFirst(super.getClass().getName(), ""));
+        result.append(", passengersCapacity=");
         result.append(passengersCapacity);
         result.append(", passengers=[");
 
@@ -98,7 +99,7 @@ public class PassengerPlane extends AbstractPlane implements Serializable {
             }
             result.append(separators);
         }
-        result.delete(result.length() - separators.length() - 1, result.length());
+        result.delete(result.length() - separators.length(), result.length());
         result.append("]");
         return result.toString();
     }

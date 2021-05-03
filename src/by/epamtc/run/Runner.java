@@ -6,9 +6,10 @@ import by.epamtc.entity.plane.additional.AircraftEngine;
 import by.epamtc.entity.plane.AbstractPlane;
 import by.epamtc.entity.plane.CargoPlane;
 import by.epamtc.entity.plane.PassengerPlane;
+import by.epamtc.entity.plane.additional.Goods;
 import by.epamtc.entity.plane.additional.Person;
 
-import java.io.IOException;
+import java.io.*;
 
 public class Runner {
     public static void main(String[] args) throws IOException {
@@ -19,10 +20,8 @@ public class Runner {
         AircraftEngine engine = new AircraftEngine(100, 100,
                 100, 100, 100, 100, 100);
 
-        PassengerPlane p1 = new PassengerPlane(engine, "A1", 3, 100, 10);
-        PassengerPlane p2 = new PassengerPlane(engine2, "A2", 7,  200, 20);
-        CargoPlane p3 = new CargoPlane(engine3, "A3", 3, 50);
-        CargoPlane p4 = new CargoPlane(engine3, "A4", 4, 150);
+        PassengerPlane p1 = new PassengerPlane(engine, "A1", 3, 100, 6);
+        PassengerPlane p2 = new PassengerPlane(engine2, "A2", 7, 200, 20);
 
         Person person1 = new Person("a", 80);
         Person person2 = new Person("b", 70);
@@ -35,6 +34,21 @@ public class Runner {
 
         Person[] persons = {person1, person2, person3, person4, person5, person6, person7, person8};
 
+
+        Goods goods = new Goods("info", "adress", 21, false);
+        Goods goods2 = new Goods("info", "adress", 19, false);
+        Goods goods3 = new Goods("info", "adress", 29, true);
+        Goods goods4 = new Goods("info", "adress", 83, false);
+        Goods goods5 = new Goods("info", "adress", 2, true);
+        Goods goods6 = new Goods("info", "adress", 93, false);
+
+        Goods[] goodsToLoad = {goods, goods2, goods3, goods4, goods5, goods6};
+
+        CargoPlane p3 = new CargoPlane(engine3, "A3", 3, 50);
+        CargoPlane p4 = new CargoPlane(engine3, "A4", 4, 150);
+        p3.loadAllGoods(goodsToLoad);
+        p4.loadAllGoods(goodsToLoad);
+
         p1.boardAllCrewMembers(persons);
         p2.boardAllCrewMembers(persons);
         p3.boardAllCrewMembers(persons);
@@ -42,13 +56,30 @@ public class Runner {
 
         p1.boardAllPassengers(persons);
         p2.boardAllPassengers(persons);
-        System.out.println(p1);
 
-        Airline airline = new Airline();
         AbstractPlane[] planes = {p1, p2, p3, p4};
-        airline.setPlanes(planes);
+        Airline airline = new Airline("airline A1", planes);
 
 //        AirlineStorage.saveAirline(airline);
+//        System.out.println(AirlineStorage.getAirline());
+
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("data.txt"))) {
+            outputStream.writeObject(airline);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+//        try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("data.txt"))) {
+//            personNew = (CargoPlane) inputStream.readObject();
+//            personNew2 = (Airline) inputStream.readObject();
+//        } catch (FileNotFoundException | ClassNotFoundException ex) {
+//            System.out.println(ex.getMessage());
+//        }
+//        System.out.println("read " + personNew);
+//        System.out.println("read " + personNew2);
+
+        AirlineStorage.saveAirline(airline);
+
         System.out.println(AirlineStorage.getAirline());
 
         System.out.println("countTotalLiftingCapacity: " + airline.countTotalLiftingCapacity());
