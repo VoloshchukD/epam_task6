@@ -1,7 +1,8 @@
 package by.epamtc.entity.plane;
 
-import by.epamtc.entity.plane.additional.AircraftEngine;
-import by.epamtc.entity.plane.additional.Person;
+import by.epamtc.entity.plane.field.AircraftEngine;
+import by.epamtc.entity.plane.field.Person;
+import by.epamtc.exception.NoSuchParameterException;
 import by.epamtc.util.FillArrayAction;
 
 import java.io.Serializable;
@@ -24,7 +25,10 @@ public class PassengerPlane extends AbstractPlane implements Serializable {
     }
 
     @Override
-    public void fly() {
+    public void fly() throws NoSuchParameterException {
+        if (getEngine() == null) {
+            throw new NoSuchParameterException("Engine is not present");
+        }
         int consumptionPerKilometer = getEngine().getFuelConsumption();
         int fuelInTank = getEngine().getTankFuelAmount();
 
@@ -32,15 +36,15 @@ public class PassengerPlane extends AbstractPlane implements Serializable {
         getEngine().setTankFuelAmount(fuelInTankLeft);
     }
 
-    public void boardPassenger(Person passenger) {
+    public void boardPassenger(Person passenger) throws NoSuchParameterException {
         FillArrayAction.addPerson(passenger, passengers);
     }
 
-    public void boardAllPassengers(Person[] newPassengers) {
+    public void boardAllPassengers(Person[] newPassengers) throws NoSuchParameterException {
         FillArrayAction.addAllPersons(newPassengers, passengers);
     }
 
-    public Person[] boardOffPassengers() {
+    public Person[] boardOffPassengers() throws NoSuchParameterException {
         Person[] boardedOffPassengers = passengers;
         FillArrayAction.removeAllPersons(passengers);
         return boardedOffPassengers;

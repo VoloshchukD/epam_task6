@@ -1,6 +1,7 @@
 package by.epamtc.entity;
 
 import by.epamtc.entity.plane.AbstractPlane;
+import by.epamtc.exception.NoSuchParameterException;
 import by.epamtc.service.sort.PlaneParametersSorting;
 
 import java.io.Serializable;
@@ -36,33 +37,41 @@ public class Airline implements Serializable {
         this.planes = planes;
     }
 
-    public AbstractPlane[] sort(Comparator<AbstractPlane> comparator) {
+    public AbstractPlane[] sort(Comparator<AbstractPlane> comparator) throws NoSuchParameterException {
         return PlaneParametersSorting.sort(planes, comparator);
     }
 
-    public int countTotalLiftingCapacity() {
-        int totalLiftingCapacity = 0;
+    public int countTotalLiftingCapacity() throws NoSuchParameterException {
+        if (planes == null) {
+            throw new NoSuchParameterException("Planes are not present");
+        }
 
+        int totalLiftingCapacity = 0;
         for (int i = 0; i < planes.length; i++) {
             totalLiftingCapacity += planes[i].getEngine().getLiftingCapacity();
         }
-
         return totalLiftingCapacity;
     }
 
-    public int countTotalCrewCapacity() {
-        int totalCrewCapacity = 0;
+    public int countTotalCrewCapacity() throws NoSuchParameterException {
+        if (planes == null) {
+            throw new NoSuchParameterException("Planes are not present");
+        }
 
+        int totalCrewCapacity = 0;
         for (int i = 0; i < planes.length; i++) {
             totalCrewCapacity += planes[i].getCrewCapacity();
         }
-
         return totalCrewCapacity;
     }
 
-    public AbstractPlane[] findPlanesByFuelConsumption(int minFuelConsumption, int maxFuelConsumption) {
-        AbstractPlane[] planesCopy = new AbstractPlane[planes.length];
+    public AbstractPlane[] findPlanesByFuelConsumption(int minFuelConsumption, int maxFuelConsumption)
+            throws NoSuchParameterException {
+        if (planes == null) {
+            throw new NoSuchParameterException("Planes are not present");
+        }
 
+        AbstractPlane[] planesCopy = new AbstractPlane[planes.length];
         int j = 0;
         for (int i = 0; i < planes.length; i++) {
             if (planes[i].getEngine().getFuelConsumption() <= maxFuelConsumption
@@ -99,14 +108,16 @@ public class Airline implements Serializable {
         Airline airline = (Airline) o;
 
         boolean result = false;
-        if (name == airline.name
-                && planes.length == airline.planes.length) {
-            int i = 0;
-            while (i < planes.length) {
-                if (planes[i] != airline.planes[i]) {
-                    break;
+        if (name.equals(airline.name)
+                && (planes == null || planes.length == airline.planes.length)) {
+            if (planes != airline.planes) {
+                int i = 0;
+                while (i < planes.length) {
+                    if (planes[i] != airline.planes[i]) {
+                        break;
+                    }
+                    i++;
                 }
-                i++;
             }
             result = true;
         }
@@ -119,8 +130,10 @@ public class Airline implements Serializable {
         result = 37 * result + name.hashCode();
 
         int planesHashcode = 0;
-        for (AbstractPlane plane : planes) {
-            planesHashcode += plane.hashCode();
+        if (planes != null) {
+            for (AbstractPlane plane : planes) {
+                planesHashcode += plane.hashCode();
+            }
         }
 
         result = 37 * result + planesHashcode;
