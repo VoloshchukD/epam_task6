@@ -1,4 +1,4 @@
-package by.epamtc.entity.plane.additional;
+package by.epamtc.entity.plane.field;
 
 import java.io.Serializable;
 
@@ -114,8 +114,7 @@ public class AircraftEngine implements Serializable {
 
     @Override
     public String toString() {
-        return getClass().getName() + "@" +
-                "maxSpeed=" + maxSpeed +
+        return getClass().getName() + "@maxSpeed=" + maxSpeed +
                 ", liftingCapacity=" + liftingCapacity +
                 ", rangeOfFlight=" + rangeOfFlight +
                 ", maxFlightHeight=" + maxFlightHeight +

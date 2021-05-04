@@ -1,4 +1,4 @@
-package by.epamtc.entity.plane.additional;
+package by.epamtc.entity.plane.field;
 
 import java.io.Serializable;
 
@@ -82,8 +82,8 @@ public class Goods implements Serializable {
 
     @Override
     public String toString() {
-        return getClass().getName() + "@" +
-                "ownerInformation=" + ownerInformation +
+        return getClass().getName() +
+                "@ownerInformation=" + ownerInformation +
                 ", destination=" + destination +
                 ", weight=" + weight +
                 ", isFragile=" + isFragile;

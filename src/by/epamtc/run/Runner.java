@@ -4,13 +4,14 @@ import by.epamtc.dao.AirlineStorage;
 
 import by.epamtc.entity.Airline;
 import by.epamtc.entity.plane.AbstractPlane;
+import by.epamtc.exception.NoSuchParameterException;
 import by.epamtc.service.sort.MaxSpeedComparator;
 import by.epamtc.service.sort.RangeOfFlightComparator;
 
 import java.io.IOException;
 
 public class Runner {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, NoSuchParameterException {
         Airline airline = AirlineStorage.getAirline("data.txt");
         System.out.println(airline);
 

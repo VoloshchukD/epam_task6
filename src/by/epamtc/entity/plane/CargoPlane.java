@@ -1,8 +1,9 @@
 package by.epamtc.entity.plane;
 
-import by.epamtc.entity.plane.additional.AircraftEngine;
-import by.epamtc.entity.plane.additional.CargoPlaneWorkload;
-import by.epamtc.entity.plane.additional.Goods;
+import by.epamtc.entity.plane.field.AircraftEngine;
+import by.epamtc.entity.plane.field.CargoPlaneWorkload;
+import by.epamtc.entity.plane.field.Goods;
+import by.epamtc.exception.NoSuchParameterException;
 import by.epamtc.util.FillArrayAction;
 
 import java.io.Serializable;
@@ -31,7 +32,10 @@ public class CargoPlane extends AbstractPlane implements Serializable {
     }
 
     @Override
-    public void fly() {
+    public void fly() throws NoSuchParameterException {
+        if (getEngine() == null) {
+            throw new NoSuchParameterException("Engine is not present");
+        }
         if (workload.getFlightable()) {
             int consumptionPerKilometer = getEngine().getFuelConsumption();
             int fuelInTank = getEngine().getTankFuelAmount();
@@ -42,8 +46,7 @@ public class CargoPlane extends AbstractPlane implements Serializable {
         }
     }
 
-    public void loadGoods(Goods goods) {
-        //if (goods == null) throw new
+    public void loadGoods(Goods goods) throws NoSuchParameterException {
         if (loadedGoods != null) {
             loadedGoods = FillArrayAction.createArrayWithNewGoods(goods, loadedGoods);
         } else {
@@ -54,13 +57,16 @@ public class CargoPlane extends AbstractPlane implements Serializable {
         recountWorkload();
     }
 
-    public void loadAllGoods(Goods[] goods) {
+    public void loadAllGoods(Goods[] goods) throws NoSuchParameterException {
+        if (goods == null) {
+            throw new NoSuchParameterException("Goods is not present");
+        }
         for (int i = 0; i < goods.length; i++) {
             loadGoods(goods[i]);
         }
     }
 
-    public Goods[] unloadAllGoods() {
+    public Goods[] unloadAllGoods() throws NoSuchParameterException {
         Goods[] unloadedGoods = loadedGoods;
         loadedGoods = null;
         currentLoadWeight = 0;
@@ -68,7 +74,10 @@ public class CargoPlane extends AbstractPlane implements Serializable {
         return unloadedGoods;
     }
 
-    private void recountWorkload() {
+    private void recountWorkload() throws NoSuchParameterException {
+        if (getEngine() == null) {
+            throw new NoSuchParameterException("Engine is not present");
+        }
         if (currentLoadWeight == 0) {
             workload = CargoPlaneWorkload.EMPTY;
         } else if (getEngine().getLiftingCapacity() / 2 == currentLoadWeight) {
