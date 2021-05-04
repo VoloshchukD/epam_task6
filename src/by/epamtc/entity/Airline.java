@@ -2,7 +2,6 @@ package by.epamtc.entity;
 
 import by.epamtc.entity.plane.AbstractPlane;
 import by.epamtc.service.sort.PlaneParametersSorting;
-import by.epamtc.service.sort.MaxSpeedComparator;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -135,16 +134,18 @@ public class Airline implements Serializable {
         result.append(name);
         result.append(", planes=[");
 
-        String separators = ", ";
-        for (AbstractPlane plane : planes) {
-            if (plane != null) {
-                result.append(plane.toString());
-            } else {
-                result.append(plane);
+        if (planes != null) {
+            String separators = ", ";
+            for (AbstractPlane plane : planes) {
+                if (plane != null) {
+                    result.append(plane.toString());
+                } else {
+                    result.append(plane);
+                }
+                result.append(separators);
             }
-            result.append(separators);
+            result.delete(result.length() - separators.length(), result.length());
         }
-        result.delete(result.length() - separators.length(), result.length());
         result.append("]");
         return result.toString();
     }
