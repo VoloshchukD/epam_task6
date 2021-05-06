@@ -8,30 +8,51 @@ import by.epamtc.exception.NoSuchParameterException;
 import by.epamtc.service.sort.MaxSpeedComparator;
 import by.epamtc.service.sort.RangeOfFlightComparator;
 
-import java.io.IOException;
-
 public class Runner {
-    public static void main(String[] args) throws IOException, NoSuchParameterException {
-        Airline airline = AirlineStorage.getAirline("data.txt");
+    public static void main(String[] args) {
+        Airline airline = null;
+        try {
+            airline = AirlineStorage.getAirline("data.txt");
+        } catch (NoSuchParameterException e) {
+            e.printStackTrace();
+        }
         System.out.println(airline);
 
-        System.out.println("countTotalLiftingCapacity: " + airline.countTotalLiftingCapacity());
-        System.out.println("countTotalCrewCapacity: " + airline.countTotalCrewCapacity());
+        try {
+            System.out.println("countTotalLiftingCapacity: " + airline.countTotalLiftingCapacity());
+            System.out.println("countTotalCrewCapacity: " + airline.countTotalCrewCapacity());
+        } catch (NoSuchParameterException e) {
+            e.printStackTrace();
+        }
 
-        AbstractPlane[] sorted = airline.sort(new MaxSpeedComparator());
+        AbstractPlane[] sorted = new AbstractPlane[0];
+        try {
+            sorted = airline.sort(new MaxSpeedComparator());
+        } catch (NoSuchParameterException e) {
+            e.printStackTrace();
+        }
         System.out.println("sort maxSpeed");
         for (int i = 0; i < sorted.length; i++) {
             System.out.println(sorted[i].getEngine().getMaxSpeed());
         }
 
-        sorted = airline.sort(new RangeOfFlightComparator());
+        try {
+            sorted = airline.sort(new RangeOfFlightComparator());
+        } catch (NoSuchParameterException e) {
+            e.printStackTrace();
+        }
         System.out.println("sort rangeOfFlight");
         for (int i = 0; i < sorted.length; i++) {
             System.out.println(sorted[i].getEngine().getRangeOfFlight());
         }
 
         System.out.println("findPlanesByFuelConsumption");
-        AbstractPlane[] result = airline.findPlanesByFuelConsumption(10, 100);
+        AbstractPlane[] result = new AbstractPlane[0];
+        try {
+            result = airline.findPlanesByFuelConsumption(10, 100);
+        } catch (NoSuchParameterException e) {
+            e.printStackTrace();
+        }
         for (int i = 0; i < result.length; i++) {
             System.out.println(result[i].getEngine().getFuelConsumption());
         }

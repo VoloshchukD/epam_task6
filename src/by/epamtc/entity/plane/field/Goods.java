@@ -10,16 +10,16 @@ public class Goods implements Serializable {
 
     private int weight;
 
-    private boolean isFragile;
+    private boolean fragile;
 
     public Goods() {
     }
 
-    public Goods(String ownerInformation, String destination, int weight, boolean isFragile) {
+    public Goods(String ownerInformation, String destination, int weight, boolean fragile) {
         this.ownerInformation = ownerInformation;
         this.destination = destination;
         this.weight = weight;
-        this.isFragile = isFragile;
+        this.fragile = fragile;
     }
 
     public String getOwnerInformation() {
@@ -47,11 +47,11 @@ public class Goods implements Serializable {
     }
 
     public boolean isFragile() {
-        return isFragile;
+        return fragile;
     }
 
     public void setFragile(boolean fragile) {
-        isFragile = fragile;
+        this.fragile = fragile;
     }
 
     @Override
@@ -61,7 +61,7 @@ public class Goods implements Serializable {
         Goods goods = (Goods) o;
 
         boolean result = false;
-        if (weight == goods.weight && isFragile == goods.isFragile
+        if (weight == goods.weight && fragile == goods.fragile
                 && ownerInformation.equals(goods.ownerInformation)
                 && destination.equals(goods.destination)) {
             result = true;
@@ -76,7 +76,7 @@ public class Goods implements Serializable {
         result = 37 * result + ownerInformation.hashCode();
         result = 37 * result + destination.hashCode();
         result = 37 * result + weight;
-        result = 37 * result + (isFragile ? 0 : 1);
+        result = 37 * result + (fragile ? 0 : 1);
         return result;
     }
 
@@ -86,7 +86,7 @@ public class Goods implements Serializable {
                 "@ownerInformation=" + ownerInformation +
                 ", destination=" + destination +
                 ", weight=" + weight +
-                ", isFragile=" + isFragile;
+                ", fragile=" + fragile;
     }
 
 }
