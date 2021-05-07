@@ -7,7 +7,7 @@ import by.epamtc.util.FillArrayAction;
 
 import java.io.Serializable;
 
-public abstract class AbstractPlane implements Serializable {
+public abstract class AbstractPlane implements Flyable, Serializable {
 
     private AircraftEngine engine;
 
@@ -59,13 +59,12 @@ public abstract class AbstractPlane implements Serializable {
         this.destinationDistance = destinationDistance;
     }
 
-    public abstract void fly() throws NoSuchParameterException;
-
+    @Override
     public void refuel() throws NoSuchParameterException {
         if (getEngine() == null) {
             throw new NoSuchParameterException("Engine is not present");
         }
-            engine.setTankFuelAmount(engine.getMaxFuelTankCapacity());
+        engine.setTankFuelAmount(engine.getMaxFuelTankCapacity());
     }
 
     public void boardCrewMember(Person crewMember) throws NoSuchParameterException {
