@@ -36,12 +36,11 @@ public class CargoPlane extends AbstractPlane implements Serializable {
         if (getEngine() == null) {
             throw new NoSuchParameterException("Engine is not present");
         }
-        if (workload.getFlightable()) {
+        if (workload.isFlightable()) {
             int consumptionPerKilometer = getEngine().getFuelConsumption();
             int fuelInTank = getEngine().getTankFuelAmount();
 
-            int fuelInTankLeft = fuelInTank - getDestinationDistance()
-                    * consumptionPerKilometer * workload.getFuelConsumptionFactor();
+            int fuelInTankLeft = fuelInTank - getDestinationDistance() * consumptionPerKilometer;
             getEngine().setTankFuelAmount(fuelInTankLeft);
         }
     }
@@ -78,17 +77,9 @@ public class CargoPlane extends AbstractPlane implements Serializable {
         if (getEngine() == null) {
             throw new NoSuchParameterException("Engine is not present");
         }
-        if (currentLoadWeight == 0) {
-            workload = CargoPlaneWorkload.EMPTY;
-        } else if (getEngine().getLiftingCapacity() / 2 == currentLoadWeight) {
-            workload = CargoPlaneWorkload.HALF_FULL_OF_GOODS;
-        } else if (getEngine().getLiftingCapacity() / 2 < currentLoadWeight) {
-            workload = CargoPlaneWorkload.MORE_THAN_HALF_FULL;
-        } else if (getEngine().getLiftingCapacity() / 2 > currentLoadWeight) {
-            workload = CargoPlaneWorkload.LESS_THAN_HALF_FULL;
-        } else if (getEngine().getLiftingCapacity() == currentLoadWeight) {
-            workload = CargoPlaneWorkload.FULL_OF_GOODS;
-        } else if (getEngine().getLiftingCapacity() < currentLoadWeight) {
+        if (currentLoadWeight <= getEngine().getLiftingCapacity()) {
+            workload = CargoPlaneWorkload.OPTIMAL;
+        } else {
             workload = CargoPlaneWorkload.OVERLOADED;
         }
     }
