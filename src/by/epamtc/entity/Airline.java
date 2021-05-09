@@ -1,7 +1,7 @@
 package by.epamtc.entity;
 
 import by.epamtc.entity.plane.AbstractPlane;
-import by.epamtc.exception.NoSuchParameterException;
+import by.epamtc.exception.NoSuchValueException;
 import by.epamtc.service.sort.PlaneParametersSorting;
 
 import java.io.Serializable;
@@ -37,13 +37,13 @@ public class Airline implements Serializable {
         this.planes = planes;
     }
 
-    public AbstractPlane[] sort(Comparator<AbstractPlane> comparator) throws NoSuchParameterException {
+    public AbstractPlane[] sort(Comparator<AbstractPlane> comparator) throws NoSuchValueException {
         return PlaneParametersSorting.sort(planes, comparator);
     }
 
-    public int countTotalLiftingCapacity() throws NoSuchParameterException {
+    public int countTotalLiftingCapacity() throws NoSuchValueException {
         if (planes == null) {
-            throw new NoSuchParameterException("Planes are not present");
+            throw new NoSuchValueException("Planes are not present");
         }
 
         int totalLiftingCapacity = 0;
@@ -53,9 +53,9 @@ public class Airline implements Serializable {
         return totalLiftingCapacity;
     }
 
-    public int countTotalCrewCapacity() throws NoSuchParameterException {
+    public int countTotalCrewCapacity() throws NoSuchValueException {
         if (planes == null) {
-            throw new NoSuchParameterException("Planes are not present");
+            throw new NoSuchValueException("Planes are not present");
         }
 
         int totalCrewCapacity = 0;
@@ -66,9 +66,9 @@ public class Airline implements Serializable {
     }
 
     public AbstractPlane[] findPlanesByFuelConsumption(int minFuelConsumption, int maxFuelConsumption)
-            throws NoSuchParameterException {
+            throws NoSuchValueException {
         if (planes == null) {
-            throw new NoSuchParameterException("Planes are not present");
+            throw new NoSuchValueException("Planes are not present");
         }
 
         AbstractPlane[] planesCopy = new AbstractPlane[planes.length];
@@ -107,21 +107,18 @@ public class Airline implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Airline airline = (Airline) o;
 
-        boolean result = false;
-        if (name.equals(airline.name)
-                && (planes == null || planes.length == airline.planes.length)) {
-            if (planes != airline.planes) {
-                int i = 0;
-                while (i < planes.length) {
-                    if (planes[i] != airline.planes[i]) {
-                        break;
-                    }
-                    i++;
-                }
+        if (name.equals(airline.name)) {
+            if (planes == airline.planes) return true;
+            if (planes == null || airline.planes == null) return false;
+
+            if (planes.length != airline.planes.length) return false;
+            for (int i = 0; i < planes.length; i++) {
+                if (!(planes[i] == null ? airline.planes[i] == null
+                        : planes[i].equals(airline.planes[i]))) return false;
             }
-            result = true;
         }
-        return result;
+
+        return true;
     }
 
     @Override
@@ -132,7 +129,7 @@ public class Airline implements Serializable {
         int planesHashcode = 0;
         if (planes != null) {
             for (AbstractPlane plane : planes) {
-                planesHashcode += plane.hashCode();
+                planesHashcode += (planes != null) ? plane.hashCode() : 0;
             }
         }
 
@@ -150,11 +147,7 @@ public class Airline implements Serializable {
         if (planes != null) {
             String separators = ", ";
             for (AbstractPlane plane : planes) {
-                if (plane != null) {
-                    result.append(plane.toString());
-                } else {
-                    result.append(plane);
-                }
+                result.append(plane);
                 result.append(separators);
             }
             result.delete(result.length() - separators.length(), result.length());

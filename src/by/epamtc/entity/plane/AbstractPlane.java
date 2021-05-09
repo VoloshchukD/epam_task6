@@ -2,10 +2,11 @@ package by.epamtc.entity.plane;
 
 import by.epamtc.entity.plane.field.AircraftEngine;
 import by.epamtc.entity.plane.field.Person;
-import by.epamtc.exception.NoSuchParameterException;
+import by.epamtc.exception.NoSuchValueException;
 import by.epamtc.util.FillArrayAction;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 public abstract class AbstractPlane implements Flyable, Serializable {
 
@@ -60,22 +61,22 @@ public abstract class AbstractPlane implements Flyable, Serializable {
     }
 
     @Override
-    public void refuel() throws NoSuchParameterException {
+    public void refuel() throws NoSuchValueException {
         if (getEngine() == null) {
-            throw new NoSuchParameterException("Engine is not present");
+            throw new NoSuchValueException("Engine is not present");
         }
         engine.setTankFuelAmount(engine.getMaxFuelTankCapacity());
     }
 
-    public void boardCrewMember(Person crewMember) throws NoSuchParameterException {
+    public void boardCrewMember(Person crewMember) throws NoSuchValueException {
         FillArrayAction.addPerson(crewMember, crew);
     }
 
-    public void boardAllCrewMembers(Person[] crewMembers) throws NoSuchParameterException {
+    public void boardAllCrewMembers(Person[] crewMembers) throws NoSuchValueException {
         FillArrayAction.addAllPersons(crewMembers, crew);
     }
 
-    public Person[] boardOffCrew() throws NoSuchParameterException {
+    public Person[] boardOffCrew() throws NoSuchValueException {
         Person[] boardedOffCrew = crew;
         FillArrayAction.removeAllPersons(crew);
         return boardedOffCrew;
@@ -87,22 +88,19 @@ public abstract class AbstractPlane implements Flyable, Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         AbstractPlane that = (AbstractPlane) o;
 
-        boolean result = false;
         if (crewCapacity == that.crewCapacity && engine.equals(that.engine)
                 && modelName.equals(that.modelName)
-                && destinationDistance == that.destinationDistance
-                && crew.length == that.crew.length) {
-            int i = 0;
-            while (i < crew.length) {
-                if (crew[i] != that.crew[i]) {
-                    break;
-                }
-                i++;
+                && destinationDistance == that.destinationDistance) {
+            if (crew == that.crew) return true;
+            if (crew == null || that.crew == null) return false;
+
+            if (crew.length != that.crew.length) return false;
+            for (int i = 0; i < crew.length; i++) {
+                if (!(crew[i] == null ? that.crew[i] == null : crew[i].equals(that.crew[i]))) return false;
             }
-            result = true;
         }
 
-        return result;
+        return true;
     }
 
     @Override
@@ -115,10 +113,10 @@ public abstract class AbstractPlane implements Flyable, Serializable {
 
         int crewHashcode = 0;
         for (Person crewMember : crew) {
-            crewHashcode += crewMember.hashCode();
+            crewHashcode += (crewMember != null) ? crewMember.hashCode() : 0;
         }
 
-        result = 31 * result + crewHashcode;
+        result = 37 * result + crewHashcode;
         return result;
     }
 
@@ -135,7 +133,7 @@ public abstract class AbstractPlane implements Flyable, Serializable {
 
         String separators = ", ";
         for (Person crewMember : crew) {
-            result.append(crewMember.toString());
+            result.append(crewMember);
             result.append(separators);
         }
         result.delete(result.length() - separators.length() - 1, result.length());

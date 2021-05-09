@@ -2,7 +2,7 @@ package by.epamtc.entity.plane;
 
 import by.epamtc.entity.plane.field.AircraftEngine;
 import by.epamtc.entity.plane.field.Person;
-import by.epamtc.exception.NoSuchParameterException;
+import by.epamtc.exception.NoSuchValueException;
 import by.epamtc.util.FillArrayAction;
 
 import java.io.Serializable;
@@ -25,9 +25,9 @@ public class PassengerPlane extends AbstractPlane implements Serializable {
     }
 
     @Override
-    public void fly() throws NoSuchParameterException {
+    public void fly() throws NoSuchValueException {
         if (getEngine() == null) {
-            throw new NoSuchParameterException("Engine is not present");
+            throw new NoSuchValueException("Engine is not present");
         }
         int consumptionPerKilometer = getEngine().getFuelConsumption();
         int fuelInTank = getEngine().getTankFuelAmount();
@@ -36,15 +36,15 @@ public class PassengerPlane extends AbstractPlane implements Serializable {
         getEngine().setTankFuelAmount(fuelInTankLeft);
     }
 
-    public void boardPassenger(Person passenger) throws NoSuchParameterException {
+    public void boardPassenger(Person passenger) throws NoSuchValueException {
         FillArrayAction.addPerson(passenger, passengers);
     }
 
-    public void boardAllPassengers(Person[] newPassengers) throws NoSuchParameterException {
+    public void boardAllPassengers(Person[] newPassengers) throws NoSuchValueException {
         FillArrayAction.addAllPersons(newPassengers, passengers);
     }
 
-    public Person[] boardOffPassengers() throws NoSuchParameterException {
+    public Person[] boardOffPassengers() throws NoSuchValueException {
         Person[] boardedOffPassengers = passengers;
         FillArrayAction.removeAllPersons(passengers);
         return boardedOffPassengers;
@@ -57,19 +57,16 @@ public class PassengerPlane extends AbstractPlane implements Serializable {
         if (!super.equals(o)) return false;
         PassengerPlane plane = (PassengerPlane) o;
 
-        boolean result = false;
-        if (passengersCapacity == plane.passengersCapacity
-                && passengers.length == plane.passengers.length) {
-            int i = 0;
-            while (i < passengers.length) {
-                if (passengers[i] != plane.passengers[i]) {
-                    break;
-                }
-                i++;
-            }
-            result = true;
+        if (passengers == plane.passengers) return true;
+        if (passengers == null || plane.passengers == null) return false;
+
+        if (passengers.length != plane.passengers.length) return false;
+        for (int i = 0; i < passengers.length; i++) {
+            if (!(passengers[i] == null ? plane.passengers[i] == null
+                    : passengers[i].equals(plane.passengers[i]))) return false;
         }
-        return result;
+
+        return true;
     }
 
     @Override
@@ -79,7 +76,7 @@ public class PassengerPlane extends AbstractPlane implements Serializable {
 
         int passengersHashcode = 0;
         for (Person passenger : passengers) {
-            passengersHashcode += passenger.hashCode();
+            passengersHashcode += (passenger != null) ? passenger.hashCode() : 0;
         }
 
         result = 37 * result + passengersHashcode;
@@ -96,11 +93,7 @@ public class PassengerPlane extends AbstractPlane implements Serializable {
 
         String separators = ", ";
         for (Person passenger : passengers) {
-            if (passenger != null) {
-                result.append(passenger.toString());
-            } else {
-                result.append(passenger);
-            }
+            result.append(passenger);
             result.append(separators);
         }
         result.delete(result.length() - separators.length(), result.length());

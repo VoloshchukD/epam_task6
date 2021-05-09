@@ -1,7 +1,7 @@
 package by.epamtc.dao;
 
 import by.epamtc.entity.Airline;
-import by.epamtc.exception.NoSuchParameterException;
+import by.epamtc.exception.NoSuchValueException;
 import by.epamtc.exception.ValueOutOfBoundsException;
 
 import java.io.FileOutputStream;
@@ -12,12 +12,12 @@ import java.io.FileInputStream;
 
 public class AirlineStorage {
 
-    public static void saveAirline(Airline airline, String fileName) throws NoSuchParameterException {
+    public static void saveAirline(Airline airline, String fileName) throws NoSuchValueException {
         if (airline == null) {
-            throw new NoSuchParameterException("Airline is not present");
+            throw new NoSuchValueException("Airline is not present");
         }
         if (fileName == null) {
-            throw new NoSuchParameterException("FileName is not present");
+            throw new NoSuchValueException("FileName is not present");
         }
 
         try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(fileName))) {
@@ -27,12 +27,12 @@ public class AirlineStorage {
         }
     }
 
-    public static void saveAirlines(Airline[] airlines, String fileName) throws NoSuchParameterException {
+    public static void saveAirlines(Airline[] airlines, String fileName) throws NoSuchValueException {
         if (airlines == null) {
-            throw new NoSuchParameterException("Airlines are not present");
+            throw new NoSuchValueException("Airlines are not present");
         }
         if (fileName == null) {
-            throw new NoSuchParameterException("FileName is not present");
+            throw new NoSuchValueException("FileName is not present");
         }
 
         try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(fileName))) {
@@ -44,9 +44,9 @@ public class AirlineStorage {
         }
     }
 
-    public static Airline getAirline(String fileName) throws NoSuchParameterException {
+    public static Airline getAirline(String fileName) throws NoSuchValueException {
         if (fileName == null) {
-            throw new NoSuchParameterException("FileName is not present");
+            throw new NoSuchValueException("FileName is not present");
         }
 
         Airline airline = null;
@@ -58,13 +58,13 @@ public class AirlineStorage {
         return airline;
     }
 
-    public static Airline[] getAirlines(int quantity, String fileName) throws NoSuchParameterException,
+    public static Airline[] getAirlines(int quantity, String fileName) throws NoSuchValueException,
             ValueOutOfBoundsException {
         if (quantity < 0) {
             throw new ValueOutOfBoundsException("Quantity cant be negative");
         }
         if (fileName == null) {
-            throw new NoSuchParameterException("FileName is not present");
+            throw new NoSuchValueException("FileName is not present");
         }
 
         Airline[] airlines = new Airline[quantity];

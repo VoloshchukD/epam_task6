@@ -4,7 +4,7 @@ import by.epamtc.dao.AirlineStorage;
 
 import by.epamtc.entity.Airline;
 import by.epamtc.entity.plane.AbstractPlane;
-import by.epamtc.exception.NoSuchParameterException;
+import by.epamtc.exception.NoSuchValueException;
 import by.epamtc.service.sort.MaxSpeedComparator;
 import by.epamtc.service.sort.RangeOfFlightComparator;
 
@@ -13,7 +13,7 @@ public class Runner {
         Airline airline = null;
         try {
             airline = AirlineStorage.getAirline("data.txt");
-        } catch (NoSuchParameterException e) {
+        } catch (NoSuchValueException e) {
             e.printStackTrace();
         }
         System.out.println(airline);
@@ -21,14 +21,14 @@ public class Runner {
         try {
             System.out.println("countTotalLiftingCapacity: " + airline.countTotalLiftingCapacity());
             System.out.println("countTotalCrewCapacity: " + airline.countTotalCrewCapacity());
-        } catch (NoSuchParameterException e) {
+        } catch (NoSuchValueException e) {
             e.printStackTrace();
         }
 
         AbstractPlane[] sorted = new AbstractPlane[0];
         try {
             sorted = airline.sort(new MaxSpeedComparator());
-        } catch (NoSuchParameterException e) {
+        } catch (NoSuchValueException e) {
             e.printStackTrace();
         }
         System.out.println("sort maxSpeed");
@@ -38,7 +38,7 @@ public class Runner {
 
         try {
             sorted = airline.sort(new RangeOfFlightComparator());
-        } catch (NoSuchParameterException e) {
+        } catch (NoSuchValueException e) {
             e.printStackTrace();
         }
         System.out.println("sort rangeOfFlight");
@@ -50,7 +50,7 @@ public class Runner {
         AbstractPlane[] result = new AbstractPlane[0];
         try {
             result = airline.findPlanesByFuelConsumption(10, 100);
-        } catch (NoSuchParameterException e) {
+        } catch (NoSuchValueException e) {
             e.printStackTrace();
         }
         for (int i = 0; i < result.length; i++) {

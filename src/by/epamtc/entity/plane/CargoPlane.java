@@ -3,7 +3,7 @@ package by.epamtc.entity.plane;
 import by.epamtc.entity.plane.field.AircraftEngine;
 import by.epamtc.entity.plane.field.CargoPlaneWorkload;
 import by.epamtc.entity.plane.field.Goods;
-import by.epamtc.exception.NoSuchParameterException;
+import by.epamtc.exception.NoSuchValueException;
 import by.epamtc.util.FillArrayAction;
 
 import java.io.Serializable;
@@ -32,9 +32,9 @@ public class CargoPlane extends AbstractPlane implements Serializable {
     }
 
     @Override
-    public void fly() throws NoSuchParameterException {
+    public void fly() throws NoSuchValueException {
         if (getEngine() == null) {
-            throw new NoSuchParameterException("Engine is not present");
+            throw new NoSuchValueException("Engine is not present");
         }
         if (workload.isFlightable()) {
             int consumptionPerKilometer = getEngine().getFuelConsumption();
@@ -45,7 +45,7 @@ public class CargoPlane extends AbstractPlane implements Serializable {
         }
     }
 
-    public void loadGoods(Goods goods) throws NoSuchParameterException {
+    public void loadGoods(Goods goods) throws NoSuchValueException {
         if (loadedGoods != null) {
             loadedGoods = FillArrayAction.createArrayWithNewGoods(goods, loadedGoods);
         } else {
@@ -56,16 +56,16 @@ public class CargoPlane extends AbstractPlane implements Serializable {
         recountWorkload();
     }
 
-    public void loadAllGoods(Goods[] goods) throws NoSuchParameterException {
+    public void loadAllGoods(Goods[] goods) throws NoSuchValueException {
         if (goods == null) {
-            throw new NoSuchParameterException("Goods is not present");
+            throw new NoSuchValueException("Goods is not present");
         }
         for (int i = 0; i < goods.length; i++) {
             loadGoods(goods[i]);
         }
     }
 
-    public Goods[] unloadAllGoods() throws NoSuchParameterException {
+    public Goods[] unloadAllGoods() throws NoSuchValueException {
         Goods[] unloadedGoods = loadedGoods;
         loadedGoods = null;
         currentLoadWeight = 0;
@@ -73,9 +73,9 @@ public class CargoPlane extends AbstractPlane implements Serializable {
         return unloadedGoods;
     }
 
-    private void recountWorkload() throws NoSuchParameterException {
+    private void recountWorkload() throws NoSuchValueException {
         if (getEngine() == null) {
-            throw new NoSuchParameterException("Engine is not present");
+            throw new NoSuchValueException("Engine is not present");
         }
         if (currentLoadWeight <= getEngine().getLiftingCapacity()) {
             workload = CargoPlaneWorkload.OPTIMAL;
@@ -91,20 +91,18 @@ public class CargoPlane extends AbstractPlane implements Serializable {
         if (!super.equals(o)) return false;
         CargoPlane that = (CargoPlane) o;
 
-        boolean result = false;
-        if (workload == that.workload && currentLoadWeight == that.currentLoadWeight
-                && loadedGoods.length == that.loadedGoods.length) {
-            int i = 0;
-            while (i < loadedGoods.length) {
-                if (loadedGoods[i] == that.loadedGoods[i]) {
-                    break;
-                }
-                i++;
+        if (workload == that.workload && currentLoadWeight == that.currentLoadWeight) {
+            if (loadedGoods == that.loadedGoods) return true;
+            if (loadedGoods == null || that.loadedGoods == null) return false;
+
+            if (loadedGoods.length != that.loadedGoods.length) return false;
+            for (int i = 0; i < loadedGoods.length; i++) {
+                if (!(loadedGoods[i] == null ? that.loadedGoods[i] == null :
+                        loadedGoods[i].equals(that.loadedGoods[i]))) return false;
             }
-            result = true;
         }
 
-        return result;
+        return true;
     }
 
     @Override
@@ -115,9 +113,9 @@ public class CargoPlane extends AbstractPlane implements Serializable {
 
         int goodsHashcode = 0;
         for (Goods goods : loadedGoods) {
-            goodsHashcode += goods.hashCode();
+            goodsHashcode += (goods != null) ? goods.hashCode() : 0;
         }
-        result = 31 * result + goodsHashcode;
+        result = 37 * result + goodsHashcode;
         return result;
     }
 
@@ -134,12 +132,7 @@ public class CargoPlane extends AbstractPlane implements Serializable {
         String separators = ", ";
         if (loadedGoods != null) {
             for (Goods goods : loadedGoods) {
-                if (goods != null) {
-                    result.append(goods.toString());
-                } else {
-                    result.append(goods);
-                }
-
+                result.append(goods);
                 result.append(separators);
             }
             result.delete(result.length() - separators.length(), result.length());

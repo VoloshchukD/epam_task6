@@ -1,11 +1,11 @@
 package by.epamtc.entity.plane;
 
-import by.epamtc.exception.NoSuchParameterException;
+import by.epamtc.exception.NoSuchValueException;
 
 public interface Flyable {
 
-    void fly() throws NoSuchParameterException;
+    void fly() throws NoSuchValueException;
 
-    void refuel() throws NoSuchParameterException;
+    void refuel() throws NoSuchValueException;
 
 }
