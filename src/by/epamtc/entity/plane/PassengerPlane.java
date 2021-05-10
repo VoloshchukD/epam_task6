@@ -93,7 +93,7 @@ public class PassengerPlane extends AbstractPlane implements Serializable {
 
         String separators = ", ";
         for (Person passenger : passengers) {
-            result.append(passenger);
+            result.append((passenger != null) ? passenger.toString() : passenger);
             result.append(separators);
         }
         result.delete(result.length() - separators.length(), result.length());

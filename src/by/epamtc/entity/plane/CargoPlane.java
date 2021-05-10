@@ -100,9 +100,10 @@ public class CargoPlane extends AbstractPlane implements Serializable {
                 if (!(loadedGoods[i] == null ? that.loadedGoods[i] == null :
                         loadedGoods[i].equals(that.loadedGoods[i]))) return false;
             }
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     @Override
@@ -132,7 +133,7 @@ public class CargoPlane extends AbstractPlane implements Serializable {
         String separators = ", ";
         if (loadedGoods != null) {
             for (Goods goods : loadedGoods) {
-                result.append(goods);
+                result.append((goods != null) ? goods.toString() : goods);
                 result.append(separators);
             }
             result.delete(result.length() - separators.length(), result.length());

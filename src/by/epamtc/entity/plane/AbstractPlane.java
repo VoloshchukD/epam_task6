@@ -98,9 +98,10 @@ public abstract class AbstractPlane implements Flyable, Serializable {
             for (int i = 0; i < crew.length; i++) {
                 if (!(crew[i] == null ? that.crew[i] == null : crew[i].equals(that.crew[i]))) return false;
             }
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     @Override
@@ -133,7 +134,7 @@ public abstract class AbstractPlane implements Flyable, Serializable {
 
         String separators = ", ";
         for (Person crewMember : crew) {
-            result.append(crewMember);
+            result.append((crewMember != null) ? crewMember.toString() : crewMember);
             result.append(separators);
         }
         result.delete(result.length() - separators.length() - 1, result.length());
