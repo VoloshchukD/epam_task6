@@ -12,7 +12,7 @@ public class Runner {
     public static void main(String[] args) {
         Airline airline = null;
         try {
-            airline = AirlineStorage.getAirline("data.txt");
+            airline = AirlineStorage.getAirline("src/resource/data.txt");
         } catch (NoSuchValueException e) {
             e.printStackTrace();
         }
