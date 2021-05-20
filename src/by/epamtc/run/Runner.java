@@ -1,19 +1,21 @@
 package by.epamtc.run;
 
-import by.epamtc.dao.AirlineStorage;
+import by.epamtc.dao.impl.AirlineDAO;
 
 import by.epamtc.entity.Airline;
 import by.epamtc.entity.plane.AbstractPlane;
+import by.epamtc.exception.DAOException;
 import by.epamtc.exception.NoSuchValueException;
 import by.epamtc.service.sort.MaxSpeedComparator;
 import by.epamtc.service.sort.RangeOfFlightComparator;
 
 public class Runner {
     public static void main(String[] args) {
+        AirlineDAO airlineDAO = new AirlineDAO("src/resource/data.txt");
         Airline airline = null;
         try {
-            airline = AirlineStorage.getAirline("src/resource/data.txt");
-        } catch (NoSuchValueException e) {
+            airline = airlineDAO.load();
+        } catch (DAOException e) {
             e.printStackTrace();
         }
         System.out.println(airline);
